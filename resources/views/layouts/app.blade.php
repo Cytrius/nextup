@@ -12,6 +12,18 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+
+    <style>
+        .navbar-default {
+            background-color:#fafaf8;
+        }
+        .navbar-brand {
+            padding-top:8px;
+            padding-bottom:8px;
+        }
+    </style>
 </head>
 <body>
     <div id="app">
@@ -29,7 +41,7 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'UpSystem') }}
+                        <img src="/img/logo.png">
                     </a>
                 </div>
 
