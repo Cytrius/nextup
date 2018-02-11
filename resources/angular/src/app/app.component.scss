@@ -10,6 +10,10 @@
         }
     }
 
+    .btn.disabled {
+        opacity: 0.5;
+    }
+
     .btn-primary {
         //blue
         background-color: #778f9e;
@@ -77,12 +81,12 @@
             opacity: 1;
         }
         &.fa-success {
-            background: #2bb27b;
-            border: 1px solid #259d6d;
+            background: #95c494;
+            border: 1px solid #95c494;
         }
         &.fa-danger {
-            background: #d9534f;
-            border: 1px solid #d43f3a;
+            background: #855d5d;
+            border: 1px solid #855d5d;
         }
     }
 
