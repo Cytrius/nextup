@@ -10,6 +10,43 @@
         }
     }
 
+    .btn-primary {
+        //blue
+        background-color: #778f9e;
+        border-color: #778f9e;
+        &:hover {
+            background-color: darken(#778f9e, 5);
+            border-color: darken(#778f9e, 5);
+        }
+    }
+    .btn-success {
+        //green
+        background-color: #95c494;
+        border-color: #95c494;
+        &:hover {
+            background-color: darken(#95c494, 5);
+            border-color: darken(#95c494, 5);
+        }
+    }
+    .btn-warning {
+        // yellow
+        background-color: #635d85;
+        border-color: #635d85;
+        &:hover {
+            background-color: darken(#635d85, 5);
+            border-color: darken(#635d85, 5);
+        }
+    }
+    .btn-default {
+        // grey
+        background-color: #c4c9cc;
+        border-color: #c4c9cc;
+        &:hover {
+            background-color: darken(#c4c9cc, 5);
+            border-color: darken(#c4c9cc, 5);
+        }
+    }
+
     .next-up {
         margin: 0.5em;
     }

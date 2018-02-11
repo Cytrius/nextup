@@ -60,7 +60,7 @@
                   (click)="engageNext()"
                   class="btn btn-success pull-right"
                   [class.disabled]="!staff.length">
-            Engage Customer
+            Busy
           </button>
           <button type="button"
                   (click)="skip()"
@@ -204,7 +204,7 @@
         <button type="button"
                 [class.disabled]="!register.last_name || !register.first_name"
                 (click)="registerMember()"
-                class="btn btn-primary">OK</button>
+                class="btn btn-success">OK</button>
       </div>
     </div>
     <!-- /.modal-content -->
