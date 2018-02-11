@@ -17,11 +17,14 @@
 
     <style>
         .navbar-default {
-            background-color:#fafaf8;
+            background-color:#ffffff;
         }
         .navbar-brand {
             padding-top:8px;
             padding-bottom:8px;
+        }
+        .navbar-brand>img {
+            height:100%;
         }
     </style>
 </head>
