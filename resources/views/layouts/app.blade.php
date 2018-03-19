@@ -20,8 +20,8 @@
             background-color:#ffffff;
         }
         .navbar-brand {
-            padding-top:8px;
-            padding-bottom:8px;
+            padding-top:0px;
+            padding-bottom:0px;
         }
         .navbar-brand>img {
             height:100%;
