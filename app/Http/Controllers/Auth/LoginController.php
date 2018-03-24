@@ -7,6 +7,8 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
 {
+    use Bestmomo\LaravelEmailConfirmation\Traits\AuthenticatesUsers;
+
     /*
     |--------------------------------------------------------------------------
     | Login Controller
@@ -16,7 +18,7 @@ class LoginController extends Controller
     | redirecting them to your home screen. The controller uses a trait
     | to conveniently provide its functionality to your applications.
     |
-    */
+     */
 
     use AuthenticatesUsers;
 
