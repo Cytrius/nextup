@@ -12,11 +12,15 @@ return [
     | default location for this type of information, allowing packages
     | to have a conventional place to find your various credentials.
     |
-    */
+     */
 
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),
+    ],
+
+    'mandrill' => [
+        'secret' => 'K1d4nZ7ydPbpTRI9IH-Mlg',
     ],
 
     'ses' => [
