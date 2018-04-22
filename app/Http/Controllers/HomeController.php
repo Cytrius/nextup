@@ -34,9 +34,9 @@ class HomeController extends Controller
 
         $staff = \DB::table('staff')->where('user_id', $userId)->get();
 
-        foreach ($staff as $index => $member) {
-            $staff[$index]['created_at'] = Carbon::parse($staff[$index]['created_at'])->toIso8601String();
-            $staff[$index]['updated_at'] = Carbon::parse($staff[$index]['created_at'])->toIso8601String();
+        foreach ($staff as $member) {
+            $member->created_at = Carbon::parse($member->created_at)->toIso8601String();
+            $member->updated_at = Carbon::parse($member->updated_at)->toIso8601String();
         }
 
         return response()->json($staff);
