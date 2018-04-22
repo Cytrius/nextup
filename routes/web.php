@@ -19,4 +19,6 @@ Auth::routes();
 
 Route::middleware('auth:web')->get('/home/{a?}/{b?}/{c?}', 'HomeController@index')->name('home');
 
-Route::middleware('auth:web')->get('/api/staff', 'HomeController@staff')->name('staff');
+Route::middleware('auth:web')->get('/api/staff', 'HomeController@getStaff')->name('list-staff');
+
+Route::middleware('auth:web')->post('/api/staff', 'HomeController@addStaff')->name('add-staff');

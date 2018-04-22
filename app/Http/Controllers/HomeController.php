@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Http\Request;
 use File;
 
 class HomeController extends Controller
@@ -26,7 +26,16 @@ class HomeController extends Controller
         return File::get(public_path() . '/dist/index.html');
     }
 
-    public function staff()
+    public function getStaff()
+    {
+        $userId = \Auth::user()->id;
+
+        $staff = \DB::table('staff')->where('user_id', $userId)->get();
+
+        return response()->json($staff);
+    }
+
+    public function addStaff(Request $request)
     {
         $userId = \Auth::user()->id;
 
