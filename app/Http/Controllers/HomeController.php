@@ -32,7 +32,7 @@ class HomeController extends Controller
     {
         $userId = \Auth::user()->id;
 
-        $staff = \DB::table('staff')->where('user_id', $userId)->get();
+        $staff = \DB::table('staff')->where('user_id', $userId)->orderBy('updated_at', 'DESC')->get();
 
         foreach ($staff as $member) {
             $member->created_at = Carbon::parse($member->created_at)->toIso8601String();

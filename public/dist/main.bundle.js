@@ -162,7 +162,7 @@ var AppComponent = /** @class */ (function () {
                     _this.staff.push({
                         first_name: member.first_name,
                         last_name: member.last_name,
-                        time_in: new Date(member.created_at),
+                        time_in: new Date(member.updated_at),
                     });
                 }
                 else {
