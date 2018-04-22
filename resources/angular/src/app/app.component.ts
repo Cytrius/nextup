@@ -1,9 +1,16 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
 
 declare var document: any;
 declare var $: any;
+
+const httpOptions = {
+    headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+    }),
+};
 
 @Component({
     selector: 'app-root',
@@ -77,7 +84,7 @@ export class AppComponent {
         this.staff.push(member);
         this.register = { first_name: null, last_name: null };
 
-        this.http.post('/api/staff', member);
+        this.http.post('/api/staff', member, httpOptions);
     }
 
     public getTimeSince(date: Date) {
