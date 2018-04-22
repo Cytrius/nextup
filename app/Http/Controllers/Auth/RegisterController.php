@@ -75,7 +75,7 @@ class RegisterController extends Controller
                 'data' => $data
             ],
             function ($message) {
-                $message->to('kev.langlois@gmail.com');
+                $message->to(env('MAIL_NOTIFY'));
             }
         );
 
