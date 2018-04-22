@@ -1,0 +1,1 @@
+[10-Apr-2018 16:45:58 UTC] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 91 bytes) in phar:///opt/cpanel/composer/bin/composer/src/Composer/Repository/ComposerRepository.php on line 547
