@@ -169,7 +169,7 @@ var AppComponent = /** @class */ (function () {
                     _this.engaged.push({
                         first_name: member.first_name,
                         last_name: member.last_name,
-                        engaged_at: new Date(),
+                        engaged_at: new Date(member.updated_at),
                     });
                 }
             }

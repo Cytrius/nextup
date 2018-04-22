@@ -34,6 +34,11 @@ class HomeController extends Controller
 
         $staff = \DB::table('staff')->where('user_id', $userId)->get();
 
+        foreach ($staff as $index => $member) {
+            $staff[$index]['created_at'] = Carbon::parse($staff[$index]['created_at'])->toIso8601String();
+            $staff[$index]['updated_at'] = Carbon::parse($staff[$index]['created_at'])->toIso8601String();
+        }
+
         return response()->json($staff);
     }
 
@@ -72,7 +77,8 @@ class HomeController extends Controller
             'first_name' => $firstName,
             'last_name' => $lastName,
         ])->update([
-            'is_available' => $isAvailable
+            'is_available' => $isAvailable,
+            'updated_at' => Carbon::now(),
         ]);
 
         return response()->json([], 200);
