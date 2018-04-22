@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use File;
 use Carbon\Carbon;
@@ -51,5 +52,29 @@ class HomeController extends Controller
         ]);
 
         return response()->json($staff);
+    }
+
+    public function updateStaff(Request $request)
+    {
+        $userId = \Auth::user()->id;
+
+        $firstName = $request->get('first_name');
+        $lastName = $request->get('last_name');
+
+        if ($request->filled('engaged_at')) {
+            $isAvailable = false;
+        } else {
+            $isAvailable = true;
+        }
+
+        \DB::table('staff')->where([
+            'user_id' => $userId,
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+        ])->update([
+            'is_available' => $isAvailable
+        ]);
+
+        return response()->json([], 200);
     }
 }

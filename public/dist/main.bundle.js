@@ -94,12 +94,14 @@ var AppComponent = /** @class */ (function () {
         var next = this.staff.splice(0, 1)[0];
         next.engaged_at = new Date();
         this.engaged.unshift(next);
+        this.http.put('/api/staff', next, httpOptions).subscribe(function (res) { });
     };
     AppComponent.prototype.skip = function () {
         var skip = this.staff.splice(0, 1)[0];
         skip.engaged_at = null;
         skip.time_in = new Date();
         this.staff.push(skip);
+        this.http.put('/api/staff', skip, httpOptions).subscribe(function (res) { });
         return;
     };
     AppComponent.prototype.addStaff = function (member, index) {
@@ -108,6 +110,7 @@ var AppComponent = /** @class */ (function () {
             member.engaged_at = null;
             member.time_in = new Date();
             this.staff.push(member);
+            this.http.put('/api/staff', member, httpOptions).subscribe(function (res) { });
             return;
         }
         console.log($('#staffModal'));

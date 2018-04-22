@@ -53,6 +53,7 @@ export class AppComponent {
         let next = this.staff.splice(0, 1)[0];
         next.engaged_at = new Date();
         this.engaged.unshift(next);
+        this.http.put('/api/staff', next, httpOptions).subscribe(res => {});
     }
 
     public skip() {
@@ -60,6 +61,7 @@ export class AppComponent {
         skip.engaged_at = null;
         skip.time_in = new Date();
         this.staff.push(skip);
+        this.http.put('/api/staff', skip, httpOptions).subscribe(res => {});
         return;
     }
 
@@ -69,6 +71,7 @@ export class AppComponent {
             member.engaged_at = null;
             member.time_in = new Date();
             this.staff.push(member);
+            this.http.put('/api/staff', member, httpOptions).subscribe(res => {});
             return;
         }
 
