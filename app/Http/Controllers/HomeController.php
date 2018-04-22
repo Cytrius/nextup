@@ -39,7 +39,13 @@ class HomeController extends Controller
     {
         $userId = \Auth::user()->id;
 
-        $staff = \DB::table('staff')->where('user_id', $userId)->get();
+        $staff = \DB::table('staff')->insert([
+            'user_id' => $userId,
+            'first_name' => $request->get('first_name'),
+            'last_name' => $request->get('last_name'),
+            'is_available' => true,
+            'index' => 0,
+        ]);
 
         return response()->json($staff);
     }

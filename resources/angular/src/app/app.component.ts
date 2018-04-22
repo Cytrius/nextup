@@ -84,7 +84,7 @@ export class AppComponent {
         this.staff.push(member);
         this.register = { first_name: null, last_name: null };
 
-        this.http.post('/api/staff', member, httpOptions);
+        this.http.post('/api/staff', member, httpOptions).subscribe(res => {});
     }
 
     public getTimeSince(date: Date) {
