@@ -130,11 +130,19 @@ export class AppComponent {
         });
         this.http.get<any[]>('/api/staff').subscribe(res => {
             for (let member of res) {
-                this.staff.push({
-                    first_name: member.first_name,
-                    last_name: member.last_name,
-                    time_in: new Date(member.created_at),
-                });
+                if (member.is_available) {
+                    this.staff.push({
+                        first_name: member.first_name,
+                        last_name: member.last_name,
+                        time_in: new Date(member.created_at),
+                    });
+                } else {
+                    this.engaged.push({
+                        first_name: member.first_name,
+                        last_name: member.last_name,
+                        engaged_at: new Date(),
+                    });
+                }
             }
         });
     }
