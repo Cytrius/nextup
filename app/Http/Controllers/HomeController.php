@@ -26,8 +26,10 @@ class HomeController extends Controller
         return File::get(public_path() . '/dist/index.html');
     }
 
-    public function staff($userId)
+    public function staff()
     {
+        $userId = \Auth::user()->id;
+
         $staff = \DB::table('staff')->where('user_id', $userId)->get();
 
         return respinse()->json($staff);
