@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 declare var document: any;
 declare var $: any;
@@ -10,7 +11,7 @@ declare var $: any;
     styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-    title = 'app';
+    constructor(private http: HttpClient) {}
 
     public timeNow = Observable.interval(1000)
         .map(x => new Date())
@@ -75,6 +76,8 @@ export class AppComponent {
         member.time_in = new Date();
         this.staff.push(member);
         this.register = { first_name: null, last_name: null };
+
+        this.http.post('/api/staff', member);
     }
 
     public getTimeSince(date: Date) {
