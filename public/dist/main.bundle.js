@@ -146,13 +146,21 @@ var AppComponent = /** @class */ (function () {
         document.getElementById('logout-form').submit();
     };
     AppComponent.prototype.ngOnInit = function () {
+        var _this = this;
         setTimeout(function () {
             $('#staffModal').on('shown.bs.modal', function () {
                 $('[name="first_name"]').focus();
             });
         });
         this.http.get('/api/staff').subscribe(function (res) {
-            console.log('getStaff', res);
+            for (var _i = 0, res_1 = res; _i < res_1.length; _i++) {
+                var member = res_1[_i];
+                _this.staff.push({
+                    first_name: member.first_name,
+                    last_name: member.last_name,
+                    time_in: new Date(member.created_at),
+                });
+            }
         });
     };
     AppComponent = __decorate([

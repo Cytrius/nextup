@@ -125,8 +125,14 @@ export class AppComponent {
                 $('[name="first_name"]').focus();
             });
         });
-        this.http.get('/api/staff').subscribe(res => {
-            console.log('getStaff', res);
+        this.http.get<any[]>('/api/staff').subscribe(res => {
+            for (let member of res) {
+                this.staff.push({
+                    first_name: member.first_name,
+                    last_name: member.last_name,
+                    time_in: new Date(member.created_at),
+                });
+            }
         });
     }
 }
