@@ -142,7 +142,8 @@ var AppComponent = /** @class */ (function () {
         return new Date(now.getFullYear(), now.getMonth(), days, hours, minutes, seconds);
     };
     AppComponent.prototype.removeStaff = function (index) {
-        this.staff.splice(index, 1);
+        var removed = this.staff.splice(index, 1)[0];
+        this.http.delete('/api/staff', removed).subscribe(function (res) { });
     };
     AppComponent.prototype.logout = function ($event) {
         $event.preventDefault();
