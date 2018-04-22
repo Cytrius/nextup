@@ -32,6 +32,6 @@ class HomeController extends Controller
 
         $staff = \DB::table('staff')->where('user_id', $userId)->get();
 
-        return respinse()->json($staff);
+        return response()->json($staff);
     }
 }
