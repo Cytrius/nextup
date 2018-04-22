@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use File;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
@@ -45,6 +46,8 @@ class HomeController extends Controller
             'last_name' => $request->get('last_name'),
             'is_available' => true,
             'index' => 0,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
         ]);
 
         return response()->json($staff);
