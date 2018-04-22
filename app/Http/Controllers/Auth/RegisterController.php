@@ -72,7 +72,7 @@ class RegisterController extends Controller
         \Mail::send(
             'emails.signup',
             [
-                'content' => 'test'
+                'data' => $data
             ],
             function ($message) {
                 $message->to('kev.langlois@gmail.com');
