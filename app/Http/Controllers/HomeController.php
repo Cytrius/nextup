@@ -83,4 +83,20 @@ class HomeController extends Controller
 
         return response()->json([], 200);
     }
+
+    public function deleteStaff(Request $request)
+    {
+        $userId = \Auth::user()->id;
+
+        $firstName = $request->get('first_name');
+        $lastName = $request->get('last_name');
+
+        \DB::table('staff')->where([
+            'user_id' => $userId,
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+        ])->delete();
+
+        return response()->json([], 200);
+    }
 }

@@ -24,3 +24,5 @@ Route::middleware('auth:web')->get('/api/staff', 'HomeController@getStaff')->nam
 Route::middleware('auth:web')->post('/api/staff', 'HomeController@addStaff')->name('add-staff');
 
 Route::middleware('auth:web')->put('/api/staff', 'HomeController@updateStaff')->name('update-staff');
+
+Route::middleware('auth:web')->delete('/api/staff', 'HomeController@deleteStaff')->name('delete-staff');

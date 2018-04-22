@@ -114,7 +114,8 @@ export class AppComponent {
     }
 
     public removeStaff(index: number) {
-        this.staff.splice(index, 1);
+        let removed = this.staff.splice(index, 1)[0];
+        this.http.delete('/api/staff', removed).subscribe(res => {});
     }
 
     public logout($event) {
