@@ -125,5 +125,8 @@ export class AppComponent {
                 $('[name="first_name"]').focus();
             });
         });
+        this.http.get('/api/staff').subscribe(res => {
+            console.log('getStaff', res);
+        });
     }
 }
