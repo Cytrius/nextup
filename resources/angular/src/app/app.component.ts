@@ -129,7 +129,8 @@ export class AppComponent {
                 $('[name="first_name"]').focus();
             });
         });
-        this.http.get<any[]>('/api/staff').subscribe(res => {
+        let timestamp = new Date().getTime();
+        this.http.get<any[]>('/api/staff?currentTime=' + timestamp).subscribe(res => {
             for (let member of res) {
                 if (member.is_available) {
                     this.staff.push({
