@@ -36,8 +36,6 @@ class HomeController extends Controller
 
         $currentTime = Carbon::createFromTimestamp($currentTime);
 
-        dd($currentTime);
-
         $staff = \DB::table('staff')
             ->where('user_id', $userId)
             ->where('created_at', '>=', $currentTime->startOfDay())
