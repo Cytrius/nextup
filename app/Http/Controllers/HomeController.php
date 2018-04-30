@@ -34,7 +34,7 @@ class HomeController extends Controller
 
         $currentTime = $request->get('currentTime');
 
-        $currentTime = Carbon::parse($currentTime);
+        $currentTime = Carbon::createFromTimestamp($currentTime);
 
         dd($currentTime);
 
