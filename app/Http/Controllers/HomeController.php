@@ -28,11 +28,19 @@ class HomeController extends Controller
         return File::get(public_path() . '/dist/index.html');
     }
 
-    public function getStaff()
+    public function getStaff(Request $request)
     {
         $userId = \Auth::user()->id;
 
-        $staff = \DB::table('staff')->where('user_id', $userId)->orderBy('updated_at', 'ASC')->get();
+        $currentTime = $request->get('currentTime');
+
+        $currentTime = Carbon::parse($currentTime);
+
+        $staff = \DB::table('staff')
+            ->where('user_id', $userId)
+            ->where('created_at', '>=', $currentTime->startOfDay())
+            ->orderBy('updated_at', 'ASC')
+            ->get();
 
         foreach ($staff as $member) {
             $member->created_at = Carbon::parse($member->created_at)->toIso8601String();
