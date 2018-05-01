@@ -88,7 +88,7 @@ export class AppComponent {
         this.staff.push(member);
         this.register = { first_name: null, last_name: null };
 
-        let localDate = moment().toISOString();
+        let localDate = moment().toISOString(true);
         this.http.post('/api/staff?currentTime=' + localDate, member, httpOptions).subscribe(res => {});
     }
 
@@ -131,7 +131,7 @@ export class AppComponent {
                 $('[name="first_name"]').focus();
             });
         });
-        let localDate = moment().toISOString();
+        let localDate = moment().toISOString(true);
         this.http.get<any[]>('/api/staff?currentTime=' + localDate).subscribe(res => {
             for (let member of res) {
                 if (member.is_available) {
