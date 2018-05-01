@@ -5,6 +5,7 @@ import { HttpHeaders } from '@angular/common/http';
 
 declare var document: any;
 declare var $: any;
+declare var moment: any;
 
 const httpOptions = {
     headers: new HttpHeaders({
@@ -87,8 +88,8 @@ export class AppComponent {
         this.staff.push(member);
         this.register = { first_name: null, last_name: null };
 
-        let localDate = new Date();
-        this.http.post('/api/staff?currentTime=' + localDate.toISOString(), member, httpOptions).subscribe(res => {});
+        let localDate = moment().toISOString();
+        this.http.post('/api/staff?currentTime=' + localDate, member, httpOptions).subscribe(res => {});
     }
 
     public getTimeSince(date: Date) {
@@ -130,8 +131,8 @@ export class AppComponent {
                 $('[name="first_name"]').focus();
             });
         });
-        let localDate = new Date();
-        this.http.get<any[]>('/api/staff?currentTime=' + localDate.toISOString()).subscribe(res => {
+        let localDate = moment().toISOString();
+        this.http.get<any[]>('/api/staff?currentTime=' + localDate).subscribe(res => {
             for (let member of res) {
                 if (member.is_available) {
                     this.staff.push({

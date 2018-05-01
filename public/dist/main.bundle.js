@@ -214,8 +214,8 @@ var AppComponent = /** @class */ (function () {
         member.time_in = new Date();
         this.staff.push(member);
         this.register = { first_name: null, last_name: null };
-        var localDate = new Date();
-        this.http.post('/api/staff?currentTime=' + localDate.toISOString(), member, httpOptions).subscribe(function (res) { });
+        var localDate = moment().toISOString();
+        this.http.post('/api/staff?currentTime=' + localDate, member, httpOptions).subscribe(function (res) { });
     };
     AppComponent.prototype.getTimeSince = function (date) {
         // get total seconds between the times
@@ -249,8 +249,8 @@ var AppComponent = /** @class */ (function () {
                 $('[name="first_name"]').focus();
             });
         });
-        var localDate = new Date();
-        this.http.get('/api/staff?currentTime=' + localDate.toISOString()).subscribe(function (res) {
+        var localDate = moment().toISOString();
+        this.http.get('/api/staff?currentTime=' + localDate).subscribe(function (res) {
             for (var _i = 0, res_1 = res; _i < res_1.length; _i++) {
                 var member = res_1[_i];
                 if (member.is_available) {
