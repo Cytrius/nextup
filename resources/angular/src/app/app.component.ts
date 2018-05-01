@@ -87,7 +87,8 @@ export class AppComponent {
         this.staff.push(member);
         this.register = { first_name: null, last_name: null };
 
-        this.http.post('/api/staff', member, httpOptions).subscribe(res => {});
+        let localDate = new Date();
+        this.http.post('/api/staff?currentTime=' + localDate.toISOString(), member, httpOptions).subscribe(res => {});
     }
 
     public getTimeSince(date: Date) {
@@ -129,8 +130,8 @@ export class AppComponent {
                 $('[name="first_name"]').focus();
             });
         });
-        let timestamp = Math.floor(Date.now() / 1000);
-        this.http.get<any[]>('/api/staff?currentTime=' + timestamp).subscribe(res => {
+        let localDate = new Date();
+        this.http.get<any[]>('/api/staff?currentTime=' + localDate.toISOString()).subscribe(res => {
             for (let member of res) {
                 if (member.is_available) {
                     this.staff.push({

@@ -34,11 +34,11 @@ class HomeController extends Controller
 
         $currentTime = $request->get('currentTime');
 
-        $currentTime = Carbon::createFromTimestamp($currentTime);
+        $currentTime = Carbon::parse($currentTime);
 
         $staff = \DB::table('staff')
             ->where('user_id', $userId)
-            ->where('created_at', '>=', $currentTime->startOfDay())
+            ->where('local_at', '>=', $currentTime->startOfDay())
             ->orderBy('updated_at', 'ASC')
             ->get();
 
@@ -54,12 +54,17 @@ class HomeController extends Controller
     {
         $userId = \Auth::user()->id;
 
+        $currentTime = $request->get('currentTime');
+
+        $currentTime = Carbon::parse($currentTime);
+
         $staff = \DB::table('staff')->insert([
             'user_id' => $userId,
             'first_name' => $request->get('first_name'),
             'last_name' => $request->get('last_name'),
             'is_available' => true,
             'index' => 0,
+            'local_at' => $currentTime,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ]);
