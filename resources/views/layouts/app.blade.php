@@ -15,6 +15,15 @@
 
     <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
 
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-9352499-6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-9352499-6');
+    </script>
+
     <style>
         .navbar-default {
             background-color:#ffffff;
