@@ -7,6 +7,8 @@ declare var document: any;
 declare var $: any;
 declare var moment: any;
 
+const httpUrl = '';
+
 const httpOptions = {
     headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -19,7 +21,7 @@ const httpOptions = {
     styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     public timeNow = Observable.interval(1000)
         .map(x => new Date())
@@ -54,7 +56,7 @@ export class AppComponent {
         let next = this.staff.splice(0, 1)[0];
         next.engaged_at = new Date();
         this.engaged.unshift(next);
-        this.http.put('/api/staff', next, httpOptions).subscribe(res => {});
+        this.http.put(httpUrl + '/api/staff', next, httpOptions).subscribe(res => { });
     }
 
     public skip() {
@@ -62,7 +64,7 @@ export class AppComponent {
         skip.engaged_at = null;
         skip.time_in = new Date();
         this.staff.push(skip);
-        this.http.put('/api/staff', skip, httpOptions).subscribe(res => {});
+        this.http.put(httpUrl + '/api/staff', skip, httpOptions).subscribe(res => { });
         return;
     }
 
@@ -72,7 +74,7 @@ export class AppComponent {
             member.engaged_at = null;
             member.time_in = new Date();
             this.staff.push(member);
-            this.http.put('/api/staff', member, httpOptions).subscribe(res => {});
+            this.http.put(httpUrl + '/api/staff', member, httpOptions).subscribe(res => { });
             return;
         }
 
@@ -89,7 +91,7 @@ export class AppComponent {
         this.register = { first_name: null, last_name: null };
 
         let localDate = moment().toISOString(true);
-        this.http.post('/api/staff?currentTime=' + localDate, member, httpOptions).subscribe(res => {});
+        this.http.post(httpUrl + '/api/staff?currentTime=' + localDate, member, httpOptions).subscribe(res => { });
     }
 
     public getTimeSince(date: Date) {
@@ -117,7 +119,7 @@ export class AppComponent {
 
     public removeStaff(index: number) {
         let removed = this.staff.splice(index, 1)[0];
-        this.http.post('/api/staff/delete', removed, httpOptions).subscribe(res => {});
+        this.http.post(httpUrl + '/api/staff/delete', removed, httpOptions).subscribe(res => { });
     }
 
     public logout($event) {
@@ -132,7 +134,7 @@ export class AppComponent {
             });
         });
         let localDate = moment().toISOString(true);
-        this.http.get<any[]>('/api/staff?currentTime=' + localDate).subscribe(res => {
+        this.http.get<any[]>(httpUrl + '/api/staff?currentTime=' + localDate).subscribe(res => {
             for (let member of res) {
                 if (member.is_available) {
                     this.staff.push({

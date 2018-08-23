@@ -32,14 +32,20 @@ class HomeController extends Controller
     {
         $userId = \Auth::user()->id;
 
+        $isPremium = \Auth::user()->premium;
+
         $currentTime = $request->get('currentTime');
 
         $currentTime = Carbon::parse($currentTime);
 
         $staff = \DB::table('staff')
-            ->where('user_id', $userId)
-            ->where('local_at', '>=', $currentTime->startOfDay())
-            ->orderBy('updated_at', 'ASC')
+            ->where('user_id', $userId);
+
+        if (!$isPremium) {
+            $staff->where('local_at', '>=', $currentTime->startOfDay());
+        }
+
+        $staff = $staff->orderBy('updated_at', 'ASC')
             ->get();
 
         foreach ($staff as $member) {
