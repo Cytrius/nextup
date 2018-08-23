@@ -28,6 +28,21 @@ class HomeController extends Controller
         return File::get(public_path() . '/dist/index.html');
     }
 
+    public function ping() {
+        return response()->json();
+    }
+
+    public function checkMasterSlave(Request $request)
+    {
+        $userId = \Auth::user()->id;
+
+        $sessionCount = \DB::table('sessions')->where('user_id', $userId)->where('last_activity', '>', strtotime('now -2 minute'))->count();
+
+        return response()->json([
+            'master' => $sessionCount <= 1
+        ]);
+    }
+
     public function getStaff(Request $request)
     {
         $userId = \Auth::user()->id;

@@ -23,6 +23,8 @@ const httpOptions = {
 export class AppComponent {
     constructor(private http: HttpClient) { }
 
+    public isSlave: boolean = false;
+
     public timeNow = Observable.interval(1000)
         .map(x => new Date())
         .share();
@@ -127,14 +129,11 @@ export class AppComponent {
         document.getElementById('logout-form').submit();
     }
 
-    ngOnInit() {
-        setTimeout(() => {
-            $('#staffModal').on('shown.bs.modal', function() {
-                $('[name="first_name"]').focus();
-            });
-        });
+    public loadData() {
         let localDate = moment().toISOString(true);
         this.http.get<any[]>(httpUrl + '/api/staff?currentTime=' + localDate).subscribe(res => {
+            this.staff = [];
+            this.engaged = [];
             for (let member of res) {
                 if (member.is_available) {
                     this.staff.push({
@@ -151,5 +150,34 @@ export class AppComponent {
                 }
             }
         });
+    }
+
+    public checkMasterSlave() {
+        this.http.get<any[]>(httpUrl + '/api/checkMasterSlave').subscribe(res => {
+            console.log('checkMasterSlave', res);
+            this.isSlave = !res['master'];
+            if (this.isSlave) {
+                setInterval(() => {
+                    this.loadData();
+                }, 5000);
+            }
+        });
+    }
+
+    public ping() {
+        this.http.get<any[]>(httpUrl + '/api/ping').subscribe(res => { });
+    }
+
+    ngOnInit() {
+        setTimeout(() => {
+            $('#staffModal').on('shown.bs.modal', function() {
+                $('[name="first_name"]').focus();
+            });
+        });
+        setInterval(() => {
+            this.ping();
+        }, 60000);
+        this.loadData();
+        this.checkMasterSlave();
     }
 }

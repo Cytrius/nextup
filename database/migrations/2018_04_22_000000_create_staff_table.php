@@ -20,6 +20,7 @@ class CreateStaffTable extends Migration
             $table->string('last_name');
             $table->integer('index');
             $table->boolean('is_available');
+            $table->timestamp('local_at');
             $table->timestamps();
         });
     }

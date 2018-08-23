@@ -26,3 +26,7 @@ Route::middleware('auth:web')->post('/api/staff', 'HomeController@addStaff')->na
 Route::middleware('auth:web')->put('/api/staff', 'HomeController@updateStaff')->name('update-staff');
 
 Route::middleware('auth:web')->post('/api/staff/delete', 'HomeController@deleteStaff')->name('delete-staff');
+
+Route::middleware('auth:web')->get('/api/checkMasterSlave', 'HomeController@checkMasterSlave')->name('master-slave');
+
+Route::middleware('auth:web')->get('/api/ping', 'HomeController@ping')->name('ping');

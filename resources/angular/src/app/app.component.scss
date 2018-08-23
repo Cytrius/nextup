@@ -10,6 +10,30 @@
         }
     }
 
+    /* Navbar text span */
+    .navbar-default .navbar-nav > li > span {
+        color: #777;
+        opacity: 0.75;
+    }
+    .navbar-nav > li > span {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        line-height: 22px;
+    }
+    .nav > li > span {
+        padding: 10px 15px;
+    }
+    .nav > li > span {
+        position: relative;
+        display: block;
+    }
+    @media (min-width: 768px) {
+        .navbar-nav > li > span {
+            padding-top: 14px;
+            padding-bottom: 14px;
+        }
+    }
+
     .btn.disabled {
         opacity: 0.5;
     }

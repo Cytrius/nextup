@@ -37,6 +37,10 @@
           <p class="navbar-text">{{ timeNow | async | date:'medium' }}</p>
         </li>
         <li>
+          <span *ngIf="!isSlave">Master</span>
+          <span *ngIf="isSlave">Viewer</span>
+        </li>
+        <li>
           <a href="/logout"
              (click)="logout($event)">Logout</a>
           <form id="logout-form"
@@ -56,13 +60,13 @@
       <div class="panel panel-default">
         <div class="panel-heading clearfix">
           <div class="panel-title pull-left">Available</div>
-          <button type="button"
+          <button type="button" *ngIf="!isSlave"
                   (click)="engageNext()"
                   class="btn btn-success pull-right"
                   [class.disabled]="!staff.length">
             Guest
           </button>
-          <button type="button"
+          <button type="button" *ngIf="!isSlave"
                   (click)="skip()"
                   class="btn btn-warning btn-margin pull-right"
                   [class.disabled]="!staff.length || staff.length === 1">
@@ -86,7 +90,7 @@
         <div class="panel-heading clearfix">
           <div class="panel-title pull-left">Available</div>
 
-          <button type="button"
+          <button type="button" *ngIf="!isSlave"
                   (click)="addStaff()"
                   class="btn btn-primary pull-right">
             Add Staff
@@ -112,7 +116,7 @@
                 <td>{{ member.first_name }} {{ member.last_name }}</td>
                 <td class="time">{{ member.time_in | date:'mediumTime' }}</td>
                 <td>
-                  <i (click)="removeStaff(index)"
+                  <i (click)="removeStaff(index)" *ngIf="!isSlave"
                      class="fa fa-button fa-danger fa-fw fa-close"></i>
                 </td>
               </tr>
@@ -144,7 +148,7 @@
                 <td>{{ member.first_name }} {{ member.last_name }}</td>
                 <td class="time">{{ member.engaged_at | date:'mediumTime' }}</td>
                 <td>
-                  <i (click)="addStaff(member, index)"
+                  <i (click)="addStaff(member, index)" *ngIf="!isSlave"
                      class="fa fa-button fa-success fa-fw fa-check"></i>
                 </td>
               </tr>
