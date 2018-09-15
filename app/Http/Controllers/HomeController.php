@@ -134,6 +134,31 @@ class HomeController extends Controller
         return response()->json([], 200);
     }
 
+    /**
+     * Return the number of staff on the available list per day
+     **/
+    public function getStaffPerDay(Request $request) {
+
+    }
+    /**
+     * Return the number of customers each hour for the given day
+     **/
+    public function getCustomersByHour(Request $request) {
+
+    }
+    /**
+     * Return the number of customers each month for the given month
+     **/
+    public function getCustomersByMonth(Request $request) {
+
+    }
+    /**
+     * Return the number of customers total for each staff member
+     **/
+    public function getCustomersByStaff(Request $request) {
+
+    }
+
     public function deleteStaff(Request $request)
     {
         $userId = \Auth::user()->id;
