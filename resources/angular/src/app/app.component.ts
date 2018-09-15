@@ -6,6 +6,7 @@ import { HttpHeaders } from '@angular/common/http';
 declare var document: any;
 declare var $: any;
 declare var moment: any;
+declare var StripeCheckout: any;
 
 const httpUrl = '';
 
@@ -22,6 +23,8 @@ const httpOptions = {
 })
 export class AppComponent {
     constructor(private http: HttpClient) { }
+
+    public isShowingStats: boolean = false;
 
     public isSlave: boolean = false;
 
@@ -179,5 +182,41 @@ export class AppComponent {
         }, 60000);
         this.loadData();
         this.checkMasterSlave();
+        this.setupStripe();
+    }
+
+    public showStats() {
+        this.isShowingStats = true;
+    }
+    public showStaff() {
+        this.isShowingStats = false;
+    }
+
+    public handler: any;
+
+    public setupStripe() {
+        this.handler = StripeCheckout.configure({
+            key: 'pk_test_38rDpRO9EAsL3ltDPW3V1jlf',
+            image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
+            locale: 'auto',
+            token: function(token) {
+                // You can access the token ID with `token.id`.
+                // Get the token ID to your server-side code for use.
+            },
+        });
+        document.getElementById('customButton').addEventListener('click', e => {
+            // Open Checkout with further options:
+            this.handler.open({
+                name: 'NextUp',
+                description: '2 widgets',
+                currency: 'cad',
+                amount: 2000,
+            });
+            e.preventDefault();
+        });
+        // Close Checkout on page navigation:
+        window.addEventListener('popstate', () => {
+            this.handler.close();
+        });
     }
 }

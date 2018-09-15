@@ -10,6 +10,12 @@
         }
     }
 
+    a {
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
     /* Navbar text span */
     .navbar-default .navbar-nav > li > span {
         color: #777;

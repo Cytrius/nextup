@@ -27,18 +27,26 @@
          id="app-navbar-collapse">
       <!-- Left Side Of Navbar -->
       <ul class="nav navbar-nav">
-        &nbsp;
+                <li>
+          <span *ngIf="!isSlave">Master</span>
+          <span *ngIf="isSlave">Viewer</span>
+        </li>
+        <li class="hidden-xs">
+          <p class="navbar-text">{{ timeNow | async | date:'medium' }}</p>
+        </li>
       </ul>
 
       <!-- Right Side Of Navbar -->
       <ul class="nav navbar-nav navbar-right">
-        <!-- Authentication Links -->
-        <li class="hidden-xs">
-          <p class="navbar-text">{{ timeNow | async | date:'medium' }}</p>
-        </li>
         <li>
-          <span *ngIf="!isSlave">Master</span>
-          <span *ngIf="isSlave">Viewer</span>
+          <a href="#" id="customButton">Upgrade</a>
+        </li>
+        <!-- Authentication Links -->
+        <li *ngIf="!isShowingStats">
+          <a (click)="showStats()">Statistics</a>
+        </li>
+        <li *ngIf="isShowingStats">
+          <a (click)="showStaff()">Staff</a>
         </li>
         <li>
           <a href="/logout"
@@ -54,7 +62,25 @@
   </div>
 </nav>
 
-<div class="container">
+<div *ngIf="isShowingStats" class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+          <div class="panel-title pull-left">Statistics</div>
+        </div>
+
+        <div class="panel-body clearfix">
+          stats
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div *ngIf="!isShowingStats" class="container">
   <div class="row">
     <div class="col-md-12">
       <div class="panel panel-default">

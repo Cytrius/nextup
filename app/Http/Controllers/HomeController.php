@@ -36,6 +36,8 @@ class HomeController extends Controller
     {
         $userId = \Auth::user()->id;
 
+        $isPremium = \Auth::user()->premium;
+
         $sessionCount = \DB::table('sessions')->where('user_id', $userId)->where('last_activity', '>', strtotime('now -2 minute'))->count();
 
         return response()->json([
@@ -113,6 +115,20 @@ class HomeController extends Controller
         ])->update([
             'is_available' => $isAvailable,
             'updated_at' => Carbon::now(),
+        ]);
+
+        $staff = \DB::table('staff')->where([
+            'user_id' => $userId,
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+        ])->first();
+
+        \DB::table('events')->insert([
+            'user_id' => $userId,
+            'staff_id' => $staff->id,
+            'action' => $isAvailable ? 'available' : 'customer',
+            'updated_at' => Carbon::now(),
+            'created_at' => Carbon::now(),
         ]);
 
         return response()->json([], 200);
