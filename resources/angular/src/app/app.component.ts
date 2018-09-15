@@ -183,13 +183,30 @@ export class AppComponent {
         this.loadData();
         this.checkMasterSlave();
         this.setupStripe();
+        this.loadStats();
     }
 
     public showStats() {
         this.isShowingStats = true;
+        this.loadStats();
     }
     public showStaff() {
         this.isShowingStats = false;
+    }
+
+    public loadStats(): void {
+        this.http.get<any[]>(httpUrl + '/api/getStaffPerDay').subscribe(res => {
+            console.log('getStaffPerDay', res);
+        });
+        this.http.get<any[]>(httpUrl + '/api/getCustomersByHour').subscribe(res => {
+            console.log('getCustomersByHour', res);
+        });
+        this.http.get<any[]>(httpUrl + '/api/getCustomersByMonth').subscribe(res => {
+            console.log('getCustomersByMonth', res);
+        });
+        this.http.get<any[]>(httpUrl + '/api/getCustomersByStaff').subscribe(res => {
+            console.log('getCustomersByStaff', res);
+        });
     }
 
     public handler: any;

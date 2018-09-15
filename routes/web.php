@@ -30,3 +30,8 @@ Route::middleware('auth:web')->post('/api/staff/delete', 'HomeController@deleteS
 Route::middleware('auth:web')->get('/api/checkMasterSlave', 'HomeController@checkMasterSlave')->name('master-slave');
 
 Route::middleware('auth:web')->get('/api/ping', 'HomeController@ping')->name('ping');
+
+Route::middleware('auth:web')->get('/api/getStaffPerDay', 'HomeController@getStaffPerDay')->name('getStaffPerDay');
+Route::middleware('auth:web')->get('/api/getCustomersByHour', 'HomeController@getCustomersByHour')->name('getCustomersByHour');
+Route::middleware('auth:web')->get('/api/getCustomersByMonth', 'HomeController@getCustomersByMonth')->name('getCustomersByMonth');
+Route::middleware('auth:web')->get('/api/getCustomersByStaff', 'HomeController@getCustomersByStaff')->name('getCustomersByStaff');
