@@ -138,25 +138,60 @@ class HomeController extends Controller
      * Return the number of staff on the available list per day
      **/
     public function getStaffPerDay(Request $request) {
+        $userId = \Auth::user()->id;
         return response()->json([], 200);
     }
+
     /**
-     * Return the number of customers each hour for the given day
+     * Return the number of customers each hour on average for the last 30 days
      **/
     public function getCustomersByHour(Request $request) {
-        return response()->json([], 200);
+        $userId = \Auth::user()->id;
+
+        $pdo = \DB::connection()->getPdo();
+
+        $query = 'SELECT `the_hour` as hour,AVG(`the_count`) as avg FROM (SELECT DATE(`created_at`) AS the_day,HOUR(`created_at`) AS the_hour, count(*) AS the_count FROM `events` WHERE `action` = "customer" AND `user_id` = '.$userId.' AND created_at BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE() GROUP BY the_day,the_hour) AS s GROUP BY the_hour';
+
+        $results = $pdo->query($query)->fetchAll(\PDO::FETCH_ASSOC);
+
+        return response()->json($results, 200);
     }
     /**
      * Return the number of customers each month for the given month
      **/
     public function getCustomersByMonth(Request $request) {
-        return response()->json([], 200);
+        $userId = \Auth::user()->id;
+
+        $pdo = \DB::connection()->getPdo();
+
+        $query = 'select DAY(created_at) as date, MONTH(created_at) as month, count(*) as count from events where `action` = \'customer\' and `user_id` = '.$userId.' and created_at BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE() group by DAY(created_at), MONTH(created_at)';
+
+        $results = $pdo->query($query)->fetchAll(\PDO::FETCH_ASSOC);
+
+        foreach($results as &$result) {
+            $result['label'] = $result['month'].'/'.$result['date'];
+        }
+
+        return response()->json($results, 200);
     }
     /**
      * Return the number of customers total for each staff member
+     * for the last 30 days
      **/
     public function getCustomersByStaff(Request $request) {
-        return response()->json([], 200);
+        $userId = \Auth::user()->id;
+
+        $pdo = \DB::connection()->getPdo();
+
+        $query = 'SELECT staff_id, AVG(`the_count`) as avg FROM (SELECT DATE(`created_at`) AS the_day, staff_id, count(*) AS the_count FROM `events` WHERE `action` = "customer" and `user_id` = '.$userId.' AND created_at BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE() GROUP BY the_day,staff_id) AS s GROUP BY staff_id';
+
+        $results = $pdo->query($query)->fetchAll(\PDO::FETCH_ASSOC);
+
+        foreach($results as &$result) {
+            $result['staff'] = \DB::table('staff')->find($result['staff_id']);
+        }
+
+        return response()->json($results, 200);
     }
 
     public function deleteStaff(Request $request)

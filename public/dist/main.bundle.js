@@ -20,7 +20,7 @@ webpackEmptyAsyncContext.id = "../../../../../src/$$_lazy_route_resource lazy re
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<link rel=\"stylesheet\"\n      href=\"/font-awesome/css/font-awesome.min.css\">\n<nav class=\"navbar navbar-default navbar-static-top\">\n  <div class=\"container\">\n    <div class=\"navbar-header\">\n\n      <!-- Collapsed Hamburger -->\n      <button type=\"button\"\n              class=\"navbar-toggle collapsed\"\n              data-toggle=\"collapse\"\n              data-target=\"#app-navbar-collapse\"\n              aria-expanded=\"false\">\n        <span class=\"sr-only\">Toggle Navigation</span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n      </button>\n\n      <!-- Branding Image -->\n      <a class=\"navbar-brand\"\n         href=\"/\">\n        <img src=\"/img/logo.png\">\n      </a>\n    </div>\n\n    <div class=\"collapse navbar-collapse\"\n         id=\"app-navbar-collapse\">\n      <!-- Left Side Of Navbar -->\n      <ul class=\"nav navbar-nav\">\n                <li>\n          <span *ngIf=\"!isSlave\">Master</span>\n          <span *ngIf=\"isSlave\">Viewer</span>\n        </li>\n        <li class=\"hidden-xs\">\n          <p class=\"navbar-text\">{{ timeNow | async | date:'medium' }}</p>\n        </li>\n      </ul>\n\n      <!-- Right Side Of Navbar -->\n      <ul class=\"nav navbar-nav navbar-right\">\n        <li>\n          <a href=\"#\" id=\"customButton\">Upgrade</a>\n        </li>\n        <!-- Authentication Links -->\n        <li *ngIf=\"!isShowingStats\">\n          <a (click)=\"showStats()\">Statistics</a>\n        </li>\n        <li *ngIf=\"isShowingStats\">\n          <a (click)=\"showStaff()\">Staff</a>\n        </li>\n        <li>\n          <a href=\"/logout\"\n             (click)=\"logout($event)\">Logout</a>\n          <form id=\"logout-form\"\n                action=\"/logout\"\n                method=\"POST\"\n                style=\"display: none;\">\n          </form>\n        </li>\n      </ul>\n    </div>\n  </div>\n</nav>\n\n<div *ngIf=\"isShowingStats\" class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-md-12\">\n      <div class=\"panel panel-default\">\n        <div class=\"panel-heading clearfix\">\n          <div class=\"panel-title pull-left\">Statistics</div>\n        </div>\n\n        <div class=\"panel-body clearfix\">\n          stats\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n\n\n\n<div *ngIf=\"!isShowingStats\" class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-md-12\">\n      <div class=\"panel panel-default\">\n        <div class=\"panel-heading clearfix\">\n          <div class=\"panel-title pull-left\">Available</div>\n          <button type=\"button\" *ngIf=\"!isSlave\"\n                  (click)=\"engageNext()\"\n                  class=\"btn btn-success pull-right\"\n                  [class.disabled]=\"!staff.length\">\n            Guest\n          </button>\n          <button type=\"button\" *ngIf=\"!isSlave\"\n                  (click)=\"skip()\"\n                  class=\"btn btn-warning btn-margin pull-right\"\n                  [class.disabled]=\"!staff.length || staff.length === 1\">\n            Skip\n          </button>\n        </div>\n\n        <div class=\"panel-body clearfix\">\n          <h1 *ngIf=\"staff.length\"\n              class=\"next-up pull-left\">{{ getNextUpName().first_name }} {{ getNextUpName ().last_name }}</h1>\n          <h1 *ngIf=\"!staff.length\"\n              class=\"next-up pull-left\">No Staff Available</h1>\n        </div>\n      </div>\n    </div>\n  </div>\n\n  <div class=\"row\">\n    <div class=\"col-md-6\">\n      <div class=\"panel panel-default\">\n        <div class=\"panel-heading clearfix\">\n          <div class=\"panel-title pull-left\">Available</div>\n\n          <button type=\"button\" *ngIf=\"!isSlave\"\n                  (click)=\"addStaff()\"\n                  class=\"btn btn-primary pull-right\">\n            Add Staff\n          </button>\n          <i *ngIf=\"!staff.length && !engaged.length\"\n             class=\"fa fa-arrow-right fa-2x pull-right bounce\"></i>\n        </div>\n\n        <div class=\"panel-body\">\n\n          <table class=\"table\">\n            <thead>\n              <tr>\n                <th>#</th>\n                <th>Name</th>\n                <th>Signed In</th>\n                <th></th>\n              </tr>\n            </thead>\n            <tbody>\n              <tr *ngFor=\"let member of staff; let index=index;\">\n                <th scope=\"row\">{{ index+1 }}</th>\n                <td>{{ member.first_name }} {{ member.last_name }}</td>\n                <td class=\"time\">{{ member.time_in | date:'mediumTime' }}</td>\n                <td>\n                  <i (click)=\"removeStaff(index)\" *ngIf=\"!isSlave\"\n                     class=\"fa fa-button fa-danger fa-fw fa-close\"></i>\n                </td>\n              </tr>\n            </tbody>\n          </table>\n\n        </div>\n      </div>\n    </div>\n\n    <div class=\"col-md-6\">\n      <div class=\"panel panel-default\">\n        <div class=\"panel-heading clearfix\">\n          <div class=\"panel-title pull-left\">Unavailable</div>\n        </div>\n\n        <div class=\"panel-body\">\n\n          <table class=\"table\">\n            <thead>\n              <tr>\n                <th>Name</th>\n                <th>Time</th>\n                <th></th>\n              </tr>\n            </thead>\n            <tbody>\n              <tr *ngFor=\"let member of engaged; let index=index;\">\n                <td>{{ member.first_name }} {{ member.last_name }}</td>\n                <td class=\"time\">{{ member.engaged_at | date:'mediumTime' }}</td>\n                <td>\n                  <i (click)=\"addStaff(member, index)\" *ngIf=\"!isSlave\"\n                     class=\"fa fa-button fa-success fa-fw fa-check\"></i>\n                </td>\n              </tr>\n            </tbody>\n          </table>\n\n        </div>\n      </div>\n    </div>\n\n  </div>\n\n</div>\n\n<div class=\"modal fade\"\n     id=\"staffModal\"\n     tabindex=\"-1\"\n     role=\"dialog\">\n  <div class=\"modal-dialog\"\n       role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\"\n                class=\"close\"\n                data-dismiss=\"modal\"\n                aria-label=\"Close\">\n          <span aria-hidden=\"true\">&times;</span>\n        </button>\n        <h4 class=\"modal-title\">Add Staff</h4>\n      </div>\n      <div class=\"modal-body\">\n        <form>\n          <div class=\"form-group\">\n            <label>First Name</label>\n            <input type=\"text\"\n                   [(ngModel)]=\"register.first_name\"\n                   (keypress)=\"modalKeyPress($event)\"\n                   name=\"first_name\"\n                   class=\"form-control\"\n                   placeholder=\"John\">\n          </div>\n          <div class=\"form-group\">\n            <label>Last Name</label>\n            <input type=\"text\"\n                   [(ngModel)]=\"register.last_name\"\n                   (keypress)=\"modalKeyPress($event)\"\n                   name=\"last_name\"\n                   class=\"form-control\"\n                   placeholder=\"Smith\">\n          </div>\n        </form>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\"\n                class=\"btn btn-default\"\n                data-dismiss=\"modal\">Cancel</button>\n        <button type=\"button\"\n                [class.disabled]=\"!register.last_name || !register.first_name\"\n                (click)=\"registerMember()\"\n                class=\"btn btn-success\">OK</button>\n      </div>\n    </div>\n    <!-- /.modal-content -->\n  </div>\n  <!-- /.modal-dialog -->\n</div>\n<!-- /.modal -->\n"
+module.exports = "<link rel=\"stylesheet\"\n      href=\"/font-awesome/css/font-awesome.min.css\">\n<nav class=\"navbar navbar-default navbar-static-top\">\n  <div class=\"container\">\n    <div class=\"navbar-header\">\n\n      <!-- Collapsed Hamburger -->\n      <button type=\"button\"\n              class=\"navbar-toggle collapsed\"\n              data-toggle=\"collapse\"\n              data-target=\"#app-navbar-collapse\"\n              aria-expanded=\"false\">\n        <span class=\"sr-only\">Toggle Navigation</span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n      </button>\n\n      <!-- Branding Image -->\n      <a class=\"navbar-brand\"\n         href=\"/\">\n        <img src=\"/img/logo.png\">\n      </a>\n    </div>\n\n    <div class=\"collapse navbar-collapse\"\n         id=\"app-navbar-collapse\">\n      <!-- Left Side Of Navbar -->\n      <ul class=\"nav navbar-nav\">\n                <li>\n          <span *ngIf=\"!isSlave\">Master</span>\n          <span *ngIf=\"isSlave\">Viewer</span>\n        </li>\n        <li class=\"hidden-xs\">\n          <p class=\"navbar-text\">{{ timeNow | async | date:'medium' }}</p>\n        </li>\n      </ul>\n\n      <!-- Right Side Of Navbar -->\n      <ul class=\"nav navbar-nav navbar-right\">\n        <li>\n          <a href=\"#\" id=\"customButton\">Upgrade</a>\n        </li>\n        <!-- Authentication Links -->\n        <li *ngIf=\"!isShowingStats\">\n          <a (click)=\"showStats()\">Statistics</a>\n        </li>\n        <li *ngIf=\"isShowingStats\">\n          <a (click)=\"showStaff()\">Staff</a>\n        </li>\n        <li>\n          <a href=\"/logout\"\n             (click)=\"logout($event)\">Logout</a>\n          <form id=\"logout-form\"\n                action=\"/logout\"\n                method=\"POST\"\n                style=\"display: none;\">\n          </form>\n        </li>\n      </ul>\n    </div>\n  </div>\n</nav>\n\n<div *ngIf=\"isShowingStats\" class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-md-12\">\n\n      <div class=\"panel panel-default\">\n        <div class=\"panel-heading clearfix\">\n          <div class=\"panel-title pull-left\">Average Customers Per Hour (Last 30)</div>\n        </div>\n\n        <div class=\"panel-body clearfix\">\n\n          <canvas id=\"averageCustomersPerHour\" style=\"width:100%; height:400px;\" height=\"400\"></canvas>\n\n        </div>\n      </div>\n\n      <div class=\"panel panel-default\">\n        <div class=\"panel-heading clearfix\">\n          <div class=\"panel-title pull-left\">Total Customers Per Day (Last 30)</div>\n        </div>\n\n        <div class=\"panel-body clearfix\">\n\n          <canvas id=\"totalCustomersPerDay\" style=\"width:100%; height:400px;\" height=\"400\"></canvas>\n\n        </div>\n      </div>\n\n      <div class=\"panel panel-default\">\n        <div class=\"panel-heading clearfix\">\n          <div class=\"panel-title pull-left\">Average Customers Per Staff Member (Last 30)</div>\n        </div>\n\n        <div class=\"panel-body clearfix\">\n\n          <canvas id=\"averageCustomersPerStaff\" style=\"width:100%; height:400px;\" height=\"400\"></canvas>\n\n        </div>\n      </div>\n\n    </div>\n  </div>\n</div>\n\n\n\n<div *ngIf=\"!isShowingStats\" class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-md-12\">\n      <div class=\"panel panel-default\">\n        <div class=\"panel-heading clearfix\">\n          <div class=\"panel-title pull-left\">Available</div>\n          <button type=\"button\" *ngIf=\"!isSlave\"\n                  (click)=\"engageNext()\"\n                  class=\"btn btn-success pull-right\"\n                  [class.disabled]=\"!staff.length\">\n            Guest\n          </button>\n          <button type=\"button\" *ngIf=\"!isSlave\"\n                  (click)=\"skip()\"\n                  class=\"btn btn-warning btn-margin pull-right\"\n                  [class.disabled]=\"!staff.length || staff.length === 1\">\n            Skip\n          </button>\n        </div>\n\n        <div class=\"panel-body clearfix\">\n          <h1 *ngIf=\"staff.length\"\n              class=\"next-up pull-left\">{{ getNextUpName().first_name }} {{ getNextUpName ().last_name }}</h1>\n          <h1 *ngIf=\"!staff.length\"\n              class=\"next-up pull-left\">No Staff Available</h1>\n        </div>\n      </div>\n    </div>\n  </div>\n\n  <div class=\"row\">\n    <div class=\"col-md-6\">\n      <div class=\"panel panel-default\">\n        <div class=\"panel-heading clearfix\">\n          <div class=\"panel-title pull-left\">Available</div>\n\n          <button type=\"button\" *ngIf=\"!isSlave\"\n                  (click)=\"addStaff()\"\n                  class=\"btn btn-primary pull-right\">\n            Add Staff\n          </button>\n          <i *ngIf=\"!staff.length && !engaged.length\"\n             class=\"fa fa-arrow-right fa-2x pull-right bounce\"></i>\n        </div>\n\n        <div class=\"panel-body\">\n\n          <table class=\"table\">\n            <thead>\n              <tr>\n                <th>#</th>\n                <th>Name</th>\n                <th>Signed In</th>\n                <th></th>\n              </tr>\n            </thead>\n            <tbody>\n              <tr *ngFor=\"let member of staff; let index=index;\">\n                <th scope=\"row\">{{ index+1 }}</th>\n                <td>{{ member.first_name }} {{ member.last_name }}</td>\n                <td class=\"time\">{{ member.time_in | date:'mediumTime' }}</td>\n                <td>\n                  <i (click)=\"removeStaff(index)\" *ngIf=\"!isSlave\"\n                     class=\"fa fa-button fa-danger fa-fw fa-close\"></i>\n                </td>\n              </tr>\n            </tbody>\n          </table>\n\n        </div>\n      </div>\n    </div>\n\n    <div class=\"col-md-6\">\n      <div class=\"panel panel-default\">\n        <div class=\"panel-heading clearfix\">\n          <div class=\"panel-title pull-left\">Unavailable</div>\n        </div>\n\n        <div class=\"panel-body\">\n\n          <table class=\"table\">\n            <thead>\n              <tr>\n                <th>Name</th>\n                <th>Time</th>\n                <th></th>\n              </tr>\n            </thead>\n            <tbody>\n              <tr *ngFor=\"let member of engaged; let index=index;\">\n                <td>{{ member.first_name }} {{ member.last_name }}</td>\n                <td class=\"time\">{{ member.engaged_at | date:'mediumTime' }}</td>\n                <td>\n                  <i (click)=\"addStaff(member, index)\" *ngIf=\"!isSlave\"\n                     class=\"fa fa-button fa-success fa-fw fa-check\"></i>\n                </td>\n              </tr>\n            </tbody>\n          </table>\n\n        </div>\n      </div>\n    </div>\n\n  </div>\n\n</div>\n\n<div class=\"modal fade\"\n     id=\"staffModal\"\n     tabindex=\"-1\"\n     role=\"dialog\">\n  <div class=\"modal-dialog\"\n       role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\"\n                class=\"close\"\n                data-dismiss=\"modal\"\n                aria-label=\"Close\">\n          <span aria-hidden=\"true\">&times;</span>\n        </button>\n        <h4 class=\"modal-title\">Add Staff</h4>\n      </div>\n      <div class=\"modal-body\">\n        <form>\n          <div class=\"form-group\">\n            <label>First Name</label>\n            <input type=\"text\"\n                   [(ngModel)]=\"register.first_name\"\n                   (keypress)=\"modalKeyPress($event)\"\n                   name=\"first_name\"\n                   class=\"form-control\"\n                   placeholder=\"John\">\n          </div>\n          <div class=\"form-group\">\n            <label>Last Name</label>\n            <input type=\"text\"\n                   [(ngModel)]=\"register.last_name\"\n                   (keypress)=\"modalKeyPress($event)\"\n                   name=\"last_name\"\n                   class=\"form-control\"\n                   placeholder=\"Smith\">\n          </div>\n        </form>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\"\n                class=\"btn btn-default\"\n                data-dismiss=\"modal\">Cancel</button>\n        <button type=\"button\"\n                [class.disabled]=\"!register.last_name || !register.first_name\"\n                (click)=\"registerMember()\"\n                class=\"btn btn-success\">OK</button>\n      </div>\n    </div>\n    <!-- /.modal-content -->\n  </div>\n  <!-- /.modal-dialog -->\n</div>\n<!-- /.modal -->\n"
 
 /***/ }),
 
@@ -216,18 +216,168 @@ var AppComponent = /** @class */ (function () {
         this.isShowingStats = false;
     };
     AppComponent.prototype.loadStats = function () {
+        var _this = this;
         this.http.get(httpUrl + '/api/getStaffPerDay').subscribe(function (res) {
             console.log('getStaffPerDay', res);
         });
         this.http.get(httpUrl + '/api/getCustomersByHour').subscribe(function (res) {
-            console.log('getCustomersByHour', res);
+            setTimeout(function () {
+                _this.renderChart1(res);
+            });
         });
         this.http.get(httpUrl + '/api/getCustomersByMonth').subscribe(function (res) {
-            console.log('getCustomersByMonth', res);
+            setTimeout(function () {
+                _this.renderChart2(res);
+            });
         });
         this.http.get(httpUrl + '/api/getCustomersByStaff').subscribe(function (res) {
-            console.log('getCustomersByStaff', res);
+            setTimeout(function () {
+                _this.renderChart3(res);
+            });
         });
+    };
+    AppComponent.prototype.renderChart1 = function (data) {
+        console.log('getCustomersByHour', data);
+        var hours = {};
+        for (var i = 0; i <= 23; i++) {
+            hours[i] = 0;
+        }
+        for (var _i = 0, data_1 = data; _i < data_1.length; _i++) {
+            var hour = data_1[_i];
+            hours[hour.hour] = Number(hour.avg);
+        }
+        console.log('hours', hours);
+        var labels = [];
+        for (var _a = 0, _b = Object.keys(hours); _a < _b.length; _a++) {
+            var label = _b[_a];
+            if (Number(label) < 12)
+                labels.push(label + ':00 AM');
+            if (Number(label) > 12)
+                labels.push(Number(label) - 12 + ':00 PM');
+        }
+        var hourAvg = [];
+        for (var _c = 0, _d = Object.keys(hours); _c < _d.length; _c++) {
+            var hour = _d[_c];
+            hourAvg.push(hours[hour]);
+        }
+        if (document.getElementById('averageCustomersPerHour')) {
+            var ctx = document.getElementById('averageCustomersPerHour').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            data: hourAvg,
+                        },
+                    ],
+                },
+                options: {
+                    legend: {
+                        display: false,
+                    },
+                    scales: {
+                        yAxes: [
+                            {
+                                ticks: {
+                                    beginAtZero: true,
+                                    stepSize: 1,
+                                },
+                            },
+                        ],
+                    },
+                },
+            });
+        }
+    };
+    AppComponent.prototype.renderChart2 = function (data) {
+        console.log('totalCustomersPerDay', data);
+        var today = new Date();
+        var todayDate = today.getDate();
+        var labels = [];
+        for (var i = 0; i <= 30; i++) {
+            var day = new Date();
+            day.setDate(day.getDate() - i);
+            labels.push(day.getMonth() + 1 + '/' + day.getDate());
+        }
+        labels.reverse();
+        var dayTotals = [];
+        var _loop_1 = function (day) {
+            var date = data.find(function (d) { return d.label === day; });
+            dayTotals.push(date ? date.count : 0);
+        };
+        for (var _i = 0, labels_1 = labels; _i < labels_1.length; _i++) {
+            var day = labels_1[_i];
+            _loop_1(day);
+        }
+        if (document.getElementById('totalCustomersPerDay')) {
+            var ctx = document.getElementById('totalCustomersPerDay').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            data: dayTotals,
+                        },
+                    ],
+                },
+                options: {
+                    legend: {
+                        display: false,
+                    },
+                    scales: {
+                        yAxes: [
+                            {
+                                ticks: {
+                                    beginAtZero: true,
+                                    stepSize: 1,
+                                },
+                            },
+                        ],
+                    },
+                },
+            });
+        }
+    };
+    AppComponent.prototype.renderChart3 = function (data) {
+        console.log('getCustomersByStaff', data);
+        var labels = [];
+        var dataAvg = [];
+        for (var _i = 0, data_2 = data; _i < data_2.length; _i++) {
+            var avg = data_2[_i];
+            labels.push(avg.staff.first_name + ' ' + avg.staff.last_name);
+            dataAvg.push(Number(avg.avg));
+        }
+        if (document.getElementById('averageCustomersPerStaff')) {
+            var ctx = document.getElementById('averageCustomersPerStaff').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            data: dataAvg,
+                        },
+                    ],
+                },
+                options: {
+                    legend: {
+                        display: false,
+                    },
+                    scales: {
+                        yAxes: [
+                            {
+                                ticks: {
+                                    beginAtZero: true,
+                                    stepSize: 1,
+                                },
+                            },
+                        ],
+                    },
+                },
+            });
+        }
     };
     AppComponent.prototype.setupStripe = function () {
         var _this = this;

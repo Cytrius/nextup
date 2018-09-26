@@ -7,6 +7,7 @@ declare var document: any;
 declare var $: any;
 declare var moment: any;
 declare var StripeCheckout: any;
+declare var Chart: any;
 
 const httpUrl = '';
 
@@ -22,7 +23,7 @@ const httpOptions = {
     styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) {}
 
     public isShowingStats: boolean = false;
 
@@ -61,7 +62,7 @@ export class AppComponent {
         let next = this.staff.splice(0, 1)[0];
         next.engaged_at = new Date();
         this.engaged.unshift(next);
-        this.http.put(httpUrl + '/api/staff', next, httpOptions).subscribe(res => { });
+        this.http.put(httpUrl + '/api/staff', next, httpOptions).subscribe(res => {});
     }
 
     public skip() {
@@ -69,7 +70,7 @@ export class AppComponent {
         skip.engaged_at = null;
         skip.time_in = new Date();
         this.staff.push(skip);
-        this.http.put(httpUrl + '/api/staff', skip, httpOptions).subscribe(res => { });
+        this.http.put(httpUrl + '/api/staff', skip, httpOptions).subscribe(res => {});
         return;
     }
 
@@ -79,7 +80,7 @@ export class AppComponent {
             member.engaged_at = null;
             member.time_in = new Date();
             this.staff.push(member);
-            this.http.put(httpUrl + '/api/staff', member, httpOptions).subscribe(res => { });
+            this.http.put(httpUrl + '/api/staff', member, httpOptions).subscribe(res => {});
             return;
         }
 
@@ -96,7 +97,7 @@ export class AppComponent {
         this.register = { first_name: null, last_name: null };
 
         let localDate = moment().toISOString(true);
-        this.http.post(httpUrl + '/api/staff?currentTime=' + localDate, member, httpOptions).subscribe(res => { });
+        this.http.post(httpUrl + '/api/staff?currentTime=' + localDate, member, httpOptions).subscribe(res => {});
     }
 
     public getTimeSince(date: Date) {
@@ -124,7 +125,7 @@ export class AppComponent {
 
     public removeStaff(index: number) {
         let removed = this.staff.splice(index, 1)[0];
-        this.http.post(httpUrl + '/api/staff/delete', removed, httpOptions).subscribe(res => { });
+        this.http.post(httpUrl + '/api/staff/delete', removed, httpOptions).subscribe(res => {});
     }
 
     public logout($event) {
@@ -168,7 +169,7 @@ export class AppComponent {
     }
 
     public ping() {
-        this.http.get<any[]>(httpUrl + '/api/ping').subscribe(res => { });
+        this.http.get<any[]>(httpUrl + '/api/ping').subscribe(res => {});
     }
 
     ngOnInit() {
@@ -199,14 +200,160 @@ export class AppComponent {
             console.log('getStaffPerDay', res);
         });
         this.http.get<any[]>(httpUrl + '/api/getCustomersByHour').subscribe(res => {
-            console.log('getCustomersByHour', res);
+            setTimeout(() => {
+                this.renderChart1(res);
+            });
         });
         this.http.get<any[]>(httpUrl + '/api/getCustomersByMonth').subscribe(res => {
-            console.log('getCustomersByMonth', res);
+            setTimeout(() => {
+                this.renderChart2(res);
+            });
         });
         this.http.get<any[]>(httpUrl + '/api/getCustomersByStaff').subscribe(res => {
-            console.log('getCustomersByStaff', res);
+            setTimeout(() => {
+                this.renderChart3(res);
+            });
         });
+    }
+
+    private renderChart1(data) {
+        console.log('getCustomersByHour', data);
+        let hours = {};
+        for (let i = 0; i <= 23; i++) {
+            hours[i] = 0;
+        }
+        for (let hour of data) {
+            hours[hour.hour] = Number(hour.avg);
+        }
+        console.log('hours', hours);
+        const labels = [];
+        for (let label of Object.keys(hours)) {
+            if (Number(label) < 12) labels.push(label + ':00 AM');
+            if (Number(label) > 12) labels.push(Number(label) - 12 + ':00 PM');
+        }
+        const hourAvg = [];
+        for (let hour of Object.keys(hours)) {
+            hourAvg.push(hours[hour]);
+        }
+        if (document.getElementById('averageCustomersPerHour')) {
+            const ctx = document.getElementById('averageCustomersPerHour').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            data: hourAvg,
+                        },
+                    ],
+                },
+                options: {
+                    legend: {
+                        display: false,
+                    },
+                    scales: {
+                        yAxes: [
+                            {
+                                ticks: {
+                                    beginAtZero: true,
+                                    stepSize: 1,
+                                },
+                            },
+                        ],
+                    },
+                },
+            });
+        }
+    }
+
+    private renderChart2(data) {
+        console.log('totalCustomersPerDay', data);
+
+        let today = new Date();
+        let todayDate = today.getDate();
+        const labels = [];
+        for (let i = 0; i <= 30; i++) {
+            let day = new Date();
+            day.setDate(day.getDate() - i);
+            labels.push(day.getMonth() + 1 + '/' + day.getDate());
+        }
+        labels.reverse();
+
+        const dayTotals = [];
+
+        for (let day of labels) {
+            let date = data.find(d => d.label === day);
+            dayTotals.push(date ? date.count : 0);
+        }
+
+        if (document.getElementById('totalCustomersPerDay')) {
+            const ctx = document.getElementById('totalCustomersPerDay').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            data: dayTotals,
+                        },
+                    ],
+                },
+                options: {
+                    legend: {
+                        display: false,
+                    },
+                    scales: {
+                        yAxes: [
+                            {
+                                ticks: {
+                                    beginAtZero: true,
+                                    stepSize: 1,
+                                },
+                            },
+                        ],
+                    },
+                },
+            });
+        }
+    }
+
+    private renderChart3(data) {
+        console.log('getCustomersByStaff', data);
+        const labels = [];
+        const dataAvg = [];
+        for (let avg of data) {
+            labels.push(avg.staff.first_name + ' ' + avg.staff.last_name);
+            dataAvg.push(Number(avg.avg));
+        }
+        if (document.getElementById('averageCustomersPerStaff')) {
+            const ctx = document.getElementById('averageCustomersPerStaff').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            data: dataAvg,
+                        },
+                    ],
+                },
+                options: {
+                    legend: {
+                        display: false,
+                    },
+                    scales: {
+                        yAxes: [
+                            {
+                                ticks: {
+                                    beginAtZero: true,
+                                    stepSize: 1,
+                                },
+                            },
+                        ],
+                    },
+                },
+            });
+        }
     }
 
     public handler: any;
