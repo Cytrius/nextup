@@ -17,7 +17,10 @@ Route::get('/', function () {
 
 Auth::routes();
 
+
 Route::middleware('auth:web')->get('/home/{a?}/{b?}/{c?}', 'HomeController@index')->name('home');
+
+Route::middleware('auth:web')->post('/api/upgrade', 'HomeController@upgrade')->name('upgrade');
 
 Route::middleware('auth:web')->get('/api/staff', 'HomeController@getStaff')->name('list-staff');
 

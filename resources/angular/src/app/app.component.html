@@ -34,19 +34,16 @@
 
       <!-- Right Side Of Navbar -->
       <ul class="nav navbar-nav navbar-right">
-        <!--<li>
-          <a href="#" id="customButton">Upgrade</a>
-        </li>-->
         <!-- Authentication Links -->
-        <!--<li *ngIf="!isShowingStats && !isShowingAdmin">
-          <a (click)="showStats()">Statistics</a>
-        </li>-->
-        <li *ngIf="isShowingStats || isShowingAdmin">
+        <li>
           <a (click)="showStaff()">Staff</a>
         </li>
-        <!--<li>
+        <li *ngIf="isPremium">
+          <a (click)="showStats()">Statistics</a>
+        </li>
+        <li *ngIf="isPremium">
           <a (click)="share()">Share</a>
-        </li>-->
+        </li>
         <li>
           <a href="/logout"
              (click)="logout($event)">Logout</a>
@@ -56,6 +53,9 @@
                 style="display: none;">
           </form>
         </li>
+        <!--<li class="admin" *ngIf="!isPremium">
+          <a href="#" id="customButton">Upgrade</a>
+        </li>-->
         <li class="admin" *ngIf="isAdmin">
           <a (click)="showAdmin()">Admin</a>
         </li>

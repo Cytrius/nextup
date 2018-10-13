@@ -30,6 +30,8 @@ export class AppComponent {
 
     public isSlave: boolean = false;
     public isAdmin: boolean = false;
+    public isPremium: boolean = false;
+    public user: any;
 
     public timeNow = Observable.interval(1000)
         .map(x => new Date())
@@ -180,6 +182,11 @@ export class AppComponent {
         this.http.get<any[]>(httpUrl + '/api/checkAdmin').subscribe(res => {
             console.log('checkAdmin', res);
             this.isAdmin = res['is_admin'];
+            this.isPremium = res['premium'];
+            this.user = res;
+            setTimeout(() => {
+                this.setupStripe();
+            });
         });
     }
 
@@ -199,7 +206,6 @@ export class AppComponent {
         this.loadData();
         this.checkMasterSlave();
         this.checkAdmin();
-        this.setupStripe();
         this.loadStats();
     }
 
@@ -477,23 +483,35 @@ export class AppComponent {
     public setupStripe() {
         this.handler = StripeCheckout.configure({
             key: 'pk_test_38rDpRO9EAsL3ltDPW3V1jlf',
-            image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
+            image: '/img/logo.png',
             locale: 'auto',
-            token: function(token) {
+            token: token => {
+                console.log('Got token', token);
                 // You can access the token ID with `token.id`.
                 // Get the token ID to your server-side code for use.
+                let payload = {
+                    token: token.id,
+                };
+                this.http.post(httpUrl + '/api/upgrade', payload, httpOptions).subscribe(res => {
+                    window.location.reload();
+                });
             },
         });
-        document.getElementById('customButton').addEventListener('click', e => {
-            // Open Checkout with further options:
-            this.handler.open({
-                name: 'NextUp',
-                description: '2 widgets',
-                currency: 'cad',
-                amount: 2000,
+        if (document.getElementById('customButton')) {
+            document.getElementById('customButton').addEventListener('click', e => {
+                // Open Checkout with further options:
+                this.handler.open({
+                    name: 'UpSystem',
+                    description: 'Monthly Premium Subscription',
+                    currency: 'cad',
+                    amount: 2000,
+                    panelLabel: 'Subscribe',
+                    email: this.user.email,
+                    allowRememberMe: false,
+                });
+                e.preventDefault();
             });
-            e.preventDefault();
-        });
+        }
         // Close Checkout on page navigation:
         window.addEventListener('popstate', () => {
             this.handler.close();

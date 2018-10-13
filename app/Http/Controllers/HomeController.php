@@ -40,11 +40,22 @@ class HomeController extends Controller
         $isPremium = \Auth::user()->premium;
 
         $sessionCount = \DB::table('sessions')->where('user_id', $userId)->where('last_activity', '>', strtotime('now -2 minute'))->count();
-*/
+        */
         return response()->json([
             //'master' => $sessionCount <= 1
             'master' => true
         ]);
+    }
+
+    public function upgrade(Request $request)
+    {
+        $user = \Auth::user();
+
+        $user->premium = true;
+
+        $user->save();
+
+        return response()->json($user);
     }
 
     public function checkAdmin(Request $request)
