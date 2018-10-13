@@ -23,7 +23,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         return File::get(public_path() . '/dist/index.html');
     }
@@ -41,9 +41,11 @@ class HomeController extends Controller
 
         $sessionCount = \DB::table('sessions')->where('user_id', $userId)->where('last_activity', '>', strtotime('now -2 minute'))->count();
         */
+
+        $isSlave = $request->session()->get('status') === 'slave';
         return response()->json([
             //'master' => $sessionCount <= 1
-            'master' => true
+            'master' => !$isSlave
         ]);
     }
 
@@ -61,6 +63,12 @@ class HomeController extends Controller
     public function checkAdmin(Request $request)
     {
         $user = \Auth::user();
+
+        $length = 32;
+
+        $user->share_token = substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
+
+        $user->save();
 
         return response()->json($user);
     }
@@ -176,6 +184,7 @@ class HomeController extends Controller
 
         return response()->json($results, 200);
     }
+
     /**
      * Return the number of customers each month for the given month
      **/
@@ -194,6 +203,7 @@ class HomeController extends Controller
 
         return response()->json($results, 200);
     }
+
     /**
      * Return the number of customers total for each staff member
      * for the last 30 days

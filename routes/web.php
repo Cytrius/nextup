@@ -17,6 +17,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::get('/home/share', 'Controller@loginViaShare')->name('loginViaShare');
 
 Route::middleware('auth:web')->get('/home/{a?}/{b?}/{c?}', 'HomeController@index')->name('home');
 

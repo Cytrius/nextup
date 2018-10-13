@@ -38,12 +38,14 @@
         <li>
           <a (click)="showStaff()">Staff</a>
         </li>
-        <li *ngIf="isPremium">
-          <a (click)="showStats()">Statistics</a>
-        </li>
-        <li *ngIf="isPremium">
-          <a (click)="share()">Share</a>
-        </li>
+        <ng-container *ngIf="!isSlave">
+          <li *ngIf="isPremium">
+            <a (click)="showStats()">Statistics</a>
+          </li>
+          <li *ngIf="isPremium">
+            <a (click)="share()">Share</a>
+          </li>
+        </ng-container>
         <li>
           <a href="/logout"
              (click)="logout($event)">Logout</a>
@@ -392,9 +394,10 @@
       <div class="modal-body" style="text-align:center;">
         <strong>Link to share:</strong>
         <br/><br/>
-        <span style="border:1px solid #eee; padding:5px;">
-        {{ getShareableUrl }}
-      </span>
+        <input type="text" id="shareLinkInput" style="width:90%; background:none; border:1px solid #eee; padding:5px;" [ngModel]="getShareableUrl">
+        <br/> <br/>
+        <button type="button" (click)="copyShareLink()"
+                class="btn btn-primary">Copy</button>
       </div>
       <div class="modal-footer">
         <button type="button" data-dismiss="modal"

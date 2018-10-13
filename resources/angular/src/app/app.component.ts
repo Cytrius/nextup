@@ -80,7 +80,7 @@ export class AppComponent {
 
     public getShareableUrl: string;
     public share() {
-        this.getShareableUrl = window.location.href + '?share=7HEygun2tmBtUwsx38c2zu5KNJHFZzM8';
+        this.getShareableUrl = window.location.href + '/share?share=' + this.user.share_token;
         $('#shareModal').modal();
     }
 
@@ -516,5 +516,16 @@ export class AppComponent {
         window.addEventListener('popstate', () => {
             this.handler.close();
         });
+    }
+
+    public copyShareLink(): void {
+        /* Get the text field */
+        var copyText = document.getElementById('shareLinkInput');
+
+        /* Select the text field */
+        copyText.select();
+
+        /* Copy the text inside the text field */
+        document.execCommand('copy');
     }
 }
