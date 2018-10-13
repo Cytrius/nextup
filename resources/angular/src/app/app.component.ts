@@ -252,10 +252,15 @@ export class AppComponent {
     public adminActiveUsersWeek: any[] = [];
     public adminActiveUsersMonth: any[] = [];
     public activeUserId: number;
+    public adminRecentRegistrations: any[] = [];
     public loadAdminStats(): void {
         this.http.get<any[]>(httpUrl + '/api/admin/getUsers').subscribe(res => {
             console.log('getUsers', res);
             this.adminUsers = res;
+        });
+        this.http.get<any[]>(httpUrl + '/api/admin/getRecentRegistrations').subscribe(res => {
+            console.log('getRecentRegistrations', res);
+            this.adminRecentRegistrations = res;
         });
         this.http.get<any[]>(httpUrl + '/api/admin/getActiveUsersToday').subscribe(res => {
             console.log('getActiveUsersToday', res);

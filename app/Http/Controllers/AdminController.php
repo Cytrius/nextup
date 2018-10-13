@@ -27,7 +27,24 @@ class AdminController extends Controller
             return response()->json([], 403);
         }
 
-        $users = User::get();
+        $users = User::where('confirmed', true)->withCount('events')->whereHas('events', function($event) {
+            $event->where('created_at', '>', Carbon::now()->subDays(30));
+        })->orderBy('events_count', 'DESC')->get();
+
+        return response()->json($users, 200);
+    }
+
+    /**
+     * Return a list of users in the system
+     **/
+    public function getRecentRegistrations(Request $request) {
+        if (!\Auth::user()->is_admin) {
+            return response()->json([], 403);
+        }
+
+        $users = User::where('confirmed', true)->where('created_at', '>', Carbon::now()->subDays(30))->withCount('events')->whereHas('events', function($event) {
+            $event->where('created_at', '>', Carbon::now()->subDays(30));
+        })->orderBy('events_count', 'DESC')->get();
 
         return response()->json($users, 200);
     }

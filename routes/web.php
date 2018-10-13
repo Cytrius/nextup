@@ -43,6 +43,7 @@ Route::middleware('auth:web')->get('/api/getCustomersByStaff', 'HomeController@g
 
 // Admin
 Route::middleware('auth:web')->get('/api/admin/getUsers', 'AdminController@getUsers')->name('adminGetUsers');
+Route::middleware('auth:web')->get('/api/admin/getRecentRegistrations', 'AdminController@getRecentRegistrations')->name('getRecentRegistrations');
 Route::middleware('auth:web')->get('/api/admin/getAccountActivity', 'AdminController@getAccountActivity')->name('adminGetAccountActivity');
 Route::middleware('auth:web')->get('/api/admin/getActiveUsersToday', 'AdminController@getActiveUsersToday')->name('adminGetActiveUsersToday');
 Route::middleware('auth:web')->get('/api/admin/getActiveUsersWeek', 'AdminController@getActiveUsersWeek')->name('adminGetActiveUsersWeek');
