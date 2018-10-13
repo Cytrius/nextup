@@ -62,7 +62,7 @@ class AdminController extends Controller
 
         $pdo = \DB::connection()->getPdo();
 
-        $query = 'select DAY(created_at) as date, MONTH(created_at) as month, count(*) as count from events where `user_id` = '.$userId.' and created_at BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE() group by DAY(created_at), MONTH(created_at)';
+        $query = 'select DAY(created_at) as date, MONTH(created_at) as month, count(*) as count from events where `user_id` = '.$userId.' and created_at BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE() + INTERVAL 1 DAY group by DAY(created_at), MONTH(created_at)';
 
         $results = $pdo->query($query)->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -85,7 +85,7 @@ class AdminController extends Controller
 
         $pdo = \DB::connection()->getPdo();
 
-        $query = 'select count(*) as count, user_id from events where created_at BETWEEN CURDATE() - INTERVAL 1 DAY AND CURDATE() group by user_id order by count DESC';
+        $query = 'select count(*) as count, user_id from events where created_at BETWEEN CURDATE() - INTERVAL 1 DAY AND CURDATE() + INTERVAL 1 DAY group by user_id order by count DESC';
 
         $results = $pdo->query($query)->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -104,7 +104,7 @@ class AdminController extends Controller
 
         $pdo = \DB::connection()->getPdo();
 
-        $query = 'select count(*) as count, user_id from events where created_at BETWEEN CURDATE() - INTERVAL 7 DAY AND CURDATE() group by user_id order by count DESC';
+        $query = 'select count(*) as count, user_id from events where created_at BETWEEN CURDATE() - INTERVAL 7 DAY AND CURDATE() + INTERVAL 1 DAY group by user_id order by count DESC';
 
         $results = $pdo->query($query)->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -123,7 +123,7 @@ class AdminController extends Controller
 
         $pdo = \DB::connection()->getPdo();
 
-        $query = 'select count(*) as count, user_id from events where created_at BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE() group by user_id order by count DESC';
+        $query = 'select count(*) as count, user_id from events where created_at BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE() + INTERVAL 1 DAY group by user_id order by count DESC';
 
         $results = $pdo->query($query)->fetchAll(\PDO::FETCH_ASSOC);
 
