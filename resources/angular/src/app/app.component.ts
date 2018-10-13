@@ -26,8 +26,10 @@ export class AppComponent {
     constructor(private http: HttpClient) {}
 
     public isShowingStats: boolean = false;
+    public isShowingAdmin: boolean = false;
 
     public isSlave: boolean = false;
+    public isAdmin: boolean = false;
 
     public timeNow = Observable.interval(1000)
         .map(x => new Date())
@@ -72,6 +74,12 @@ export class AppComponent {
         this.staff.push(skip);
         this.http.put(httpUrl + '/api/staff', skip, httpOptions).subscribe(res => {});
         return;
+    }
+
+    public getShareableUrl: string;
+    public share() {
+        this.getShareableUrl = window.location.href + '?share=7HEygun2tmBtUwsx38c2zu5KNJHFZzM8';
+        $('#shareModal').modal();
     }
 
     public addStaff(member?: any, index?: number) {
@@ -168,6 +176,13 @@ export class AppComponent {
         });
     }
 
+    public checkAdmin() {
+        this.http.get<any[]>(httpUrl + '/api/checkAdmin').subscribe(res => {
+            console.log('checkAdmin', res);
+            this.isAdmin = res['is_admin'];
+        });
+    }
+
     public ping() {
         this.http.get<any[]>(httpUrl + '/api/ping').subscribe(res => {});
     }
@@ -183,16 +198,26 @@ export class AppComponent {
         }, 60000);
         this.loadData();
         this.checkMasterSlave();
+        this.checkAdmin();
         this.setupStripe();
         this.loadStats();
     }
 
     public showStats() {
         this.isShowingStats = true;
+        this.isShowingAdmin = false;
         this.loadStats();
     }
     public showStaff() {
         this.isShowingStats = false;
+        this.isShowingAdmin = false;
+    }
+    public showAdmin() {
+        if (this.isAdmin) {
+            this.isShowingStats = false;
+            this.isShowingAdmin = true;
+            this.loadAdminStats();
+        }
     }
 
     public loadStats(): void {
@@ -214,6 +239,93 @@ export class AppComponent {
                 this.renderChart3(res);
             });
         });
+    }
+
+    public adminUsers: any[] = [];
+    public adminActiveUsersToday: any[] = [];
+    public adminActiveUsersWeek: any[] = [];
+    public adminActiveUsersMonth: any[] = [];
+    public activeUserId: number;
+    public loadAdminStats(): void {
+        this.http.get<any[]>(httpUrl + '/api/admin/getUsers').subscribe(res => {
+            console.log('getUsers', res);
+            this.adminUsers = res;
+        });
+        this.http.get<any[]>(httpUrl + '/api/admin/getActiveUsersToday').subscribe(res => {
+            console.log('getActiveUsersToday', res);
+            this.adminActiveUsersToday = res;
+        });
+        this.http.get<any[]>(httpUrl + '/api/admin/getActiveUsersWeek').subscribe(res => {
+            console.log('getActiveUsersWeek', res);
+            this.adminActiveUsersWeek = res;
+        });
+        this.http.get<any[]>(httpUrl + '/api/admin/getActiveUsersMonth').subscribe(res => {
+            console.log('getActiveUsersMonth', res);
+            this.adminActiveUsersMonth = res;
+        });
+    }
+
+    public setActiveUserId(id: number) {
+        this.activeUserId = id;
+        this.http.get<any[]>(httpUrl + '/api/admin/getAccountActivity?user_id=' + id).subscribe(res => {
+            console.log('getAccountActivity', res);
+            this.renderAdminActivtyChart(res);
+        });
+    }
+
+    public getUserFromId(id: number): string {
+        return this.adminUsers.find(user => user.id === id);
+    }
+
+    private renderAdminActivtyChart(data) {
+        console.log('renderAdminActivtyChart', data);
+
+        let today = new Date();
+        let todayDate = today.getDate();
+        const labels = [];
+        for (let i = 0; i <= 30; i++) {
+            let day = new Date();
+            day.setDate(day.getDate() - i);
+            labels.push(day.getMonth() + 1 + '/' + day.getDate());
+        }
+        labels.reverse();
+
+        const dayTotals = [];
+
+        for (let day of labels) {
+            let date = data.find(d => d.label === day);
+            dayTotals.push(date ? date.count : 0);
+        }
+
+        if (document.getElementById('adminActivityChart')) {
+            const ctx = document.getElementById('adminActivityChart').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            data: dayTotals,
+                        },
+                    ],
+                },
+                options: {
+                    legend: {
+                        display: false,
+                    },
+                    scales: {
+                        yAxes: [
+                            {
+                                ticks: {
+                                    beginAtZero: true,
+                                    stepSize: 1,
+                                },
+                            },
+                        ],
+                    },
+                },
+            });
+        }
     }
 
     private renderChart1(data) {
@@ -322,7 +434,11 @@ export class AppComponent {
         const labels = [];
         const dataAvg = [];
         for (let avg of data) {
-            labels.push(avg.staff.first_name + ' ' + avg.staff.last_name);
+            if (avg.staff) {
+                labels.push(avg.staff.first_name + ' ' + avg.staff.last_name);
+            } else {
+                labels.push('No name');
+            }
             dataAvg.push(Number(avg.avg));
         }
         if (document.getElementById('averageCustomersPerStaff')) {

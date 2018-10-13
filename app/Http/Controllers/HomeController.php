@@ -34,15 +34,24 @@ class HomeController extends Controller
 
     public function checkMasterSlave(Request $request)
     {
+        /*
         $userId = \Auth::user()->id;
 
         $isPremium = \Auth::user()->premium;
 
         $sessionCount = \DB::table('sessions')->where('user_id', $userId)->where('last_activity', '>', strtotime('now -2 minute'))->count();
-
+*/
         return response()->json([
-            'master' => $sessionCount <= 1
+            //'master' => $sessionCount <= 1
+            'master' => true
         ]);
+    }
+
+    public function checkAdmin(Request $request)
+    {
+        $user = \Auth::user();
+
+        return response()->json($user);
     }
 
     public function getStaff(Request $request)
